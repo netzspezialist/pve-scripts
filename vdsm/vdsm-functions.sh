@@ -184,7 +184,10 @@ arc_release_download() {
 
 # Function arc_default_vm
 arc_default_vm() {
-	VM_ID=$(pvesh get /cluster/nextid)
+	# Respect pre-set VM_ID (e.g., from user prompt); otherwise select next free
+	if [[ -z "$VM_ID" ]]; then
+		VM_ID=$(pvesh get /cluster/nextid)
+	fi
 	VM_NAME="vDSM.Arc"
 	STORAGE=$STORAGE
 	CORES=2

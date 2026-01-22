@@ -8,8 +8,8 @@
 export LANG=en_US.UTF-8
 
 # Import misc functions
-source <(curl -fsSL https://raw.githubusercontent.com/And-rix/pve-scripts/main/misc/misc.sh)
-source <(curl -fsSL https://raw.githubusercontent.com/And-rix/pve-scripts/main/vdsm/vdsm-functions.sh)
+source <(curl -fsSL https://raw.githubusercontent.com/netzspezialist/pve-scripts/main/misc/misc.sh)
+source <(curl -fsSL https://raw.githubusercontent.com/netzspezialist/pve-scripts/main/vdsm/vdsm-functions.sh)
 
 # Header
 create_header "vDSM-Arc-Install"
@@ -58,6 +58,39 @@ fi
 
 # Define VM parameters
 arc_default_vm
+
+## Optional: let user choose a custom VM ID
+while true; do
+    CUSTOM_VM_ID=$(whiptail --title "Custom VM ID (optional)" \
+        --inputbox "Enter a numeric VM ID to use, or leave blank to keep $VM_ID:" 10 70 3>&1 1>&2 2>&3)
+
+    # If cancelled, exit gracefully
+    if [[ $? -ne 0 ]]; then
+        whiptail --title "Cancelled" --msgbox "Installation cancelled." 8 50
+        exit 1
+    fi
+
+    # Blank input -> keep current VM_ID (auto-selected)
+    if [[ -z "$CUSTOM_VM_ID" ]]; then
+        break
+    fi
+
+    # Validate numeric
+    if ! [[ "$CUSTOM_VM_ID" =~ ^[0-9]+$ ]]; then
+        whiptail --title "Invalid ID" --msgbox "VM ID must be a positive number." 8 60
+        continue
+    fi
+
+    # Check not already in use
+    if vm_check_exist "$CUSTOM_VM_ID"; then
+        whiptail --title "ID In Use" --msgbox "VM ID $CUSTOM_VM_ID already exists. Please choose another." 8 60
+        continue
+    fi
+
+    # Accept
+    VM_ID="$CUSTOM_VM_ID"
+    break
+done
 
 # Spinner group
 {

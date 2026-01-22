@@ -7,9 +7,12 @@
 
 export LANG=en_US.UTF-8
 
+# Resolve local directory for running bundled scripts
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Import misc functions
-source <(curl -fsSL https://raw.githubusercontent.com/And-rix/pve-scripts/main/misc/misc.sh)
-source <(curl -fsSL https://raw.githubusercontent.com/And-rix/pve-scripts/main/vdsm/vdsm-functions.sh)
+source <(curl -fsSL https://raw.githubusercontent.com/netzspezialist/pve-scripts/main/misc/misc.sh)
+source <(curl -fsSL https://raw.githubusercontent.com/netzspezialist/pve-scripts/main/vdsm/vdsm-functions.sh)
 
 # Header
 create_header "vDSM-Arc-Toolkit"
@@ -33,15 +36,16 @@ while true; do
 
     case "$OPTION" in
         1)
-            bash -c "$(curl -fsSL https://raw.githubusercontent.com/And-rix/pve-scripts/refs/heads/main/vdsm/vdsm-arc-install.sh)"
+            # Run local installer to support custom VM ID prompt
+            bash "$SCRIPT_DIR/vdsm-arc-install.sh"
             exit 0
             ;;
         2)
-            bash -c "$(curl -fsSL https://raw.githubusercontent.com/And-rix/pve-scripts/refs/heads/main/vdsm/vdsm-arc-update.sh)"
+            bash -c "$(curl -fsSL https://raw.githubusercontent.com/netzspezialist/pve-scripts/refs/heads/main/vdsm/vdsm-arc-update.sh)"
             exit 0
             ;;
         3)
-            bash -c "$(curl -fsSL https://raw.githubusercontent.com/And-rix/pve-scripts/refs/heads/main/vdsm/vm-disk-update.sh)"
+            bash -c "$(curl -fsSL https://raw.githubusercontent.com/netzspezialist/pve-scripts/refs/heads/main/vdsm/vm-disk-update.sh)"
             exit 0
             ;;
         x)
