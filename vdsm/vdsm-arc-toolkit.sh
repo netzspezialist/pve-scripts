@@ -7,9 +7,6 @@
 
 export LANG=en_US.UTF-8
 
-# Resolve local directory for running bundled scripts
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # Import misc functions
 source <(curl -fsSL https://raw.githubusercontent.com/netzspezialist/pve-scripts/main/misc/misc.sh)
 source <(curl -fsSL https://raw.githubusercontent.com/netzspezialist/pve-scripts/main/vdsm/vdsm-functions.sh)
@@ -36,8 +33,7 @@ while true; do
 
     case "$OPTION" in
         1)
-            # Run local installer to support custom VM ID prompt
-            bash "$SCRIPT_DIR/vdsm-arc-install.sh"
+            bash -c "$(curl -fsSL https://raw.githubusercontent.com/netzspezialist/pve-scripts/refs/heads/main/vdsm/vdsm-arc-install.sh)"
             exit 0
             ;;
         2)
